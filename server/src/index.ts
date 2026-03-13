@@ -3,9 +3,14 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path, { dirname } from 'path';    // <- added to specify .env
 import ticketRoutes from './routes/tickets';
 
-dotenv.config();
+// <-- tell dotenv exactly where the .env file is
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
+console.log('Loading env from:', path.resolve(__dirname, '../.env'));
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 

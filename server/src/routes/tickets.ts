@@ -6,8 +6,12 @@ const router = express.Router();
 
 // GET all tickets
 router.get('/', async (req: Request, res: Response) => {
-  const tickets = await Ticket.find();
-  res.json(tickets);
+  try {
+    const tickets = await Ticket.find();
+    res.json(tickets);
+  } catch {
+    res.status(500).json({ error: 'Failed to fetch tickets'})
+  }
 });
 
 // POST new ticket
@@ -27,7 +31,16 @@ router.patch('/:id', async (req: Request, res: Response) => {
   const { status } = req.body;
 
   try {
-    const updated = await Ticket.findByIdAndUpdate(id, { status }, { new: true });
+    const updated = await Ticket.findByIdAndUpdate(
+      id, 
+      { status }, 
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ error: 'Ticket not found' });
+    }
+
     res.json(updated);
   } catch {
     res.status(400).json({ error: 'Failed to update status' });

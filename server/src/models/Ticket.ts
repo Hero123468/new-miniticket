@@ -6,7 +6,10 @@ const ticketSchema = new mongoose.Schema({
   category: { type: String, enum: ['Bug', 'Feature Request', 'Question'], required: true },
   description: { type: String, required: true },
   status: { type: String, enum: ['Open', 'Closed'], default: 'Open' },
-}, { timestamps: true });
+}, { 
+  timestamps: true,
+  versionKey: false,
+});
 
 const Ticket = mongoose.model('Ticket', ticketSchema);
 export default Ticket;

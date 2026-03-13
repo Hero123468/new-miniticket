@@ -1,23 +1,23 @@
 // client/src/components/TicketForm.tsx
 import React, { useState } from 'react';
-import type { Ticket } from '../types/ticket';
-type FormTicket = Omit<Ticket, 'id' | 'status'>;
+import type { Ticket, FormTicket } from '../types/ticket';
 
 type TicketFormProps = {
-  onSubmit?: (ticket: FormTicket) => void;
+  onSubmit?: (ticket: Ticket) => void;
 };
 
 export default function TicketForm({ onSubmit }: TicketFormProps) {
   const [form, setForm] = useState<FormTicket>({
-    name: '',
-    email: '',
-    category: 'Bug',
-    description: '',
-  });
+  name: '',
+  email: '',
+  category: 'Bug',
+  description: '',
+});
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement  | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement  | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -37,8 +37,10 @@ export default function TicketForm({ onSubmit }: TicketFormProps) {
         throw new Error('Failed to create ticket');
       }
 
-      const newTicket = await res.json();
+      const newTicket: Ticket = await res.json();
       if (onSubmit) onSubmit(newTicket);
+
+      // Reset form
       setForm({ name: '', email: '', category: 'Bug', description: '' });
     } catch (err) {
       setError((err as Error).message);
